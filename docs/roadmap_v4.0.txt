@@ -1,0 +1,837 @@
+============================================================
+SCRCPY STUDIO
+============================================================
+FEUILLE DE ROADMAP
+============================================================
+Version : 4.0
+Technologie : Python 3.11+ / PySide6
+Direction artistique : Néon-bleu premium
+Architecture : BASE (6 vues) / PRO (11+ vues)
+Objectif : couverture 100% des options scrcpy 4.1
+Signé : @Bienvenu K.K
+============================================================
+
+
+============================================================
+CHANGELOG v3.2 -> v4.0
+============================================================
+
+- Nom du projet confirmé : Scrcpy Studio
+- Signature : @Bienvenu K.K
+- Refonte complète from scratch
+- Palette néon-bleu premium (validée via mockup)
+- Architecture à deux modes : BASE / PRO
+- Multi-instances
+- Profils par instance
+- Presets visuels
+- Métriques live (FPS / latence / batterie)
+- Preview téléphone
+- Command Palette (Ctrl+K)
+- Vue Macros
+- 100% des options scrcpy 4.1 exposées
+
+
+============================================================
+SIGNATURE
+============================================================
+
+Projet : Scrcpy Studio
+Auteur : Bienvenu K.K
+Signature : @Bienvenu K.K
+Version : 4.0
+Année : 2026
+
+Cette signature apparaît :
+    - Dans la fenêtre "À propos"
+    - Dans le pied de la sidebar
+    - Dans le README.md
+    - Dans les métadonnées pyproject.toml
+    - Dans le titre de la fenêtre (optionnel)
+
+
+============================================================
+1. VISION
+============================================================
+
+Scrcpy Studio est un lanceur graphique premium pour scrcpy.
+
+Son objectif : rendre accessible toute la puissance de
+scrcpy via une interface moderne, fluide et haut de gamme.
+
+Principe directeur :
+
+    Simple par défaut, complet sur demande,
+    beau dans tous les cas.
+
+L'interface adopte une esthétique "néon-bleu premium" :
+fond noir profond, accents bleu néon et violet, cartes
+denses aux bordures fines et lumineuses, animations
+subtiles.
+
+RÈGLE FONDAMENTALE :
+
+    Aucune option de scrcpy ne doit être inaccessible
+    via le GUI en mode PRO.
+
+
+============================================================
+2. DIRECTION ARTISTIQUE
+============================================================
+
+2.1 PALETTE NÉON-BLEU PREMIUM (par défaut)
+
+    Fond général        : #0A0E1A  (noir bleuté profond)
+    Fond secondaire     : #0F1420  (surfaces)
+    Fond cartes         : #141B2D  (cartes principales)
+    Fond cartes alt.    : #1A2338  (cartes secondaires)
+    Bordures            : #1F2A44  (bordures fines)
+    Bordures actives    : #3B82F6  (bleu néon)
+    Accent principal    : #3B82F6  (bleu néon)
+    Accent secondaire   : #8B5CF6  (violet)
+    Accent succès       : #10B981  (vert néon)
+    Accent warning      : #F59E0B  (orange)
+    Accent erreur       : #EF4444  (rouge)
+    Texte principal     : #F8FAFC  (blanc cassé)
+    Texte secondaire    : #94A3B8  (gris bleuté)
+    Texte tertiaire     : #64748B  (gris foncé)
+    Texte sur accent    : #FFFFFF
+
+2.2 PALETTES ALTERNATIVES
+
+    - hyperos : sobre, #75B9FF, #A78BFA
+    - aurora  : fond animé, multicolore
+    - gold    : tons dorés
+    - ocean   : bleus/verts
+
+    L'utilisateur peut basculer depuis Paramètres › Ambiance.
+
+2.3 FORMES ET PROFONDEUR
+
+    - Coins arrondis : 12px (cartes), 8px (boutons)
+    - Espacements : 12px standard, 8px compact
+    - Bordures : 1px, couleur #1F2A44
+    - Bordures actives : 1px, couleur accent
+    - Verre dépoli : activé (opacité 85%)
+    - Ombres douces : QGraphicsDropShadowEffect
+    - Glow subtil sur éléments actifs (accent)
+
+2.4 TYPOGRAPHIE
+
+    - UI : Inter, SF Pro, Segoe UI
+    - Mono : JetBrains Mono, Fira Code, Consolas
+    - Hiérarchie :
+        * Titre page : 22-26px, semi-bold
+        * Titre carte : 14-15px, medium
+        * Texte : 12-13px
+        * Hint : 11-12px, opacité 60%
+        * Labels pill : 10-11px
+
+2.5 ICÔNES
+
+    - SVG inline, style outline
+    - Cohérentes (même stroke-width)
+    - Toujours accompagnées d'un libellé sauf évidence
+
+
+============================================================
+3. ARCHITECTURE DE LA FENÊTRE
+============================================================
+
+    ┌───────────────────────────────────────────────────────┐
+    │ A. BARRE SUPÉRIEURE                                   │
+    │  ☰  ⚡ Logo · Scrcpy Studio  v4.0 [PRO]               │
+    │     [Search / Command Palette...  Ctrl+K]             │
+    │     [● Live] [🔔] [⚙] [—] [□] [✕]                     │
+    ├────────────┬──────────────────────────────┬───────────┤
+    │            │ B2. ONGLETS INSTANCES        │           │
+    │ B. SIDEBAR │ [Device 1: S23 Ultra ✕] [+ New]           │
+    │            ├──────────────────────────────┤ D. INFO   │
+    │  BASE      │ B3. ONGLETS PROFILS          │           │
+    │  • Device  │ [Vue principale][Profil 2][+]│  État     │
+    │  • Vidéo   │                              │  connexion│
+    │  • Audio   ├──────────────────────────────┤           │
+    │  • Affich. │ C. ZONE PRINCIPALE           │  Commande │
+    │  • Contrôle│                              │  preview  │
+    │  • Enreg.  │  [Carte appareil]            │           │
+    │            │  [Préréglages rapides]       │  Infos    │
+    │  PRO       │  [Paramètres d'écran]        │  appareil │
+    │  • Caméra  │  [Preview + Actions]         │           │
+    │  • Virtuel │                              │           │
+    │  • OTG/Game│                              │           │
+    │  • Macros  │                              │           │
+    │            │                              │           │
+    │ [Plus de   │                              │           │
+    │  possibilités]                            │           │
+    ├────────────┴──────────────────────────────┴───────────┤
+    │ E. BARRE INFÉRIEURE                                   │
+    │  ● ADB Ready  [✕]  [> Command: "scrcpy..."] [Test]   │
+    │  [🚀 LAUNCH SCRCPY]                                   │
+    └───────────────────────────────────────────────────────┘
+
+ZONE A — Barre supérieure (72px)
+    ☰ toggle sidebar, Logo, titre, version pill,
+    search Ctrl+K, Live indicator, notifs, paramètres,
+    contrôles fenêtre.
+
+ZONE B1 — Sidebar (260px)
+    Sections repliables BASE / PRO.
+    Pied : carte "Plus de possibilités avec Scrcpy !"
+    Signature @Bienvenu K.K discrète en bas.
+
+ZONE B2 — Onglets instances (60px)
+    [Device 1: S23 Ultra ✕] [+ New Instance]
+    Chaque onglet = session indépendante.
+
+ZONE B3 — Onglets profils (48px)
+    [Vue principale] [Profil 2] [Profil 3] [+]
+    Chaque profil = jeu de réglages sauvegardé.
+
+ZONE C — Zone principale
+    QStackedWidget avec fondu entre les vues.
+
+ZONE D — Panneau contexte (280px)
+    ÉTAT CONNEXION / COMMAND PREVIEW / INFOS APPAREIL.
+    Masquable (Ctrl+D).
+
+ZONE E — Barre inférieure (80px)
+    ADB Ready, commande live, [Test], [LAUNCH SCRCPY].
+
+
+============================================================
+4. ARBORESCENCE
+============================================================
+
+scrcpy_studio/
+│
+├── main.py
+├── requirements.txt
+├── pyproject.toml
+├── README.md
+├── scrcpy_aide.txt
+├── .gitignore
+│
+├── config/
+│   ├── __init__.py
+│   ├── settings_store.py
+│   ├── profiles.py
+│   └── defaults.py
+│
+├── core/
+│   ├── __init__.py
+│   ├── models.py
+│   ├── scrcpy.py
+│   ├── adb.py
+│   ├── process.py
+│   ├── scrcpy_help.py
+│   ├── metrics.py
+│   └── instances.py
+│
+├── ui/
+│   ├── __init__.py
+│   ├── theme.py
+│   ├── window.py
+│   │
+│   ├── widgets/
+│   │   ├── __init__.py
+│   │   ├── glass.py
+│   │   ├── controls.py
+│   │   ├── icons.py
+│   │   ├── animations.py
+│   │   ├── sidebar.py
+│   │   ├── titlebar.py
+│   │   ├── mode_toggle.py
+│   │   ├── instance_tabs.py
+│   │   ├── profile_tabs.py
+│   │   ├── info_panel.py
+│   │   ├── command_bar.py
+│   │   ├── status_bar.py
+│   │   ├── preset_card.py
+│   │   ├── device_card.py
+│   │   ├── metric_pill.py
+│   │   ├── quick_actions.py
+│   │   └── command_palette.py
+│   │
+│   └── views/
+│       ├── __init__.py
+│       ├── base_view.py
+│       │
+│       │  ─── BASE ───
+│       ├── device.py
+│       ├── video.py
+│       ├── audio.py
+│       ├── display.py
+│       ├── control.py
+│       ├── record.py
+│       │
+│       │  ─── PRO ───
+│       ├── camera.py
+│       ├── virtual_display.py
+│       ├── gamepad.py
+│       ├── macros.py
+│       ├── network.py
+│       ├── window_position.py
+│       ├── rotation.py
+│       ├── advanced_av.py
+│       ├── behavior.py
+│       ├── v4l2.py
+│       ├── debug.py
+│       │
+│       │  ─── Toujours accessible ───
+│       ├── advanced.py
+│       ├── console.py
+│       ├── about.py
+│       └── settings.py
+│
+├── resources/
+│   ├── fonts/
+│   ├── icons/
+│   └── themes.json
+│
+├── docs/
+│   ├── roadmap_v4.0.txt
+│   ├── mockup_reference.png
+│   ├── scrcpy_aide.txt
+│   └── design_notes.md
+│
+└── tests/
+    ├── __init__.py
+    ├── test_smoke.py
+    ├── test_models.py
+    ├── test_scrcpy.py
+    └── test_settings_store.py
+
+
+============================================================
+5. MODÈLE ÉTENDU — Settings (~100 champs)
+============================================================
+
+Champs organisés par catégorie.
+
+APPAREIL / CONNEXION (13)
+    serial, conn, ip, tcpip_addr, tcpip_force,
+    tcpip_force_reconnect, select_usb, select_tcpip,
+    port_range, tunnel_host, tunnel_port, force_adb_forward,
+    kill_adb_on_close
+
+VIDÉO (15)
+    video_source, bitrate, max_size, max_fps, codec, vbuf,
+    video_encoder, video_codec_options, no_video,
+    no_video_playback, no_playback, no_downsize_on_error,
+    min_size_alignment, ignore_video_encoder_constraints,
+    no_mipmaps
+
+AUDIO (12)
+    audio, asource, acodec, abuf, adup, audio_bitrate,
+    audio_encoder, audio_codec_options, audio_output_buffer,
+    no_audio, no_audio_playback, require_audio
+
+CAMÉRA (10)
+    camera_id, camera_facing, camera_size, camera_fps,
+    camera_ar, camera_high_speed, camera_torch, camera_zoom,
+    camera_no_torch_on_exit, camera_start_torch
+
+AFFICHAGE FENÊTRE (8)
+    fullscreen, ontop, keepactive, borderless, title,
+    window_x, window_y, no_window_aspect_ratio_lock
+
+ÉCRAN VIRTUEL (10)
+    newdisplay, vd_res, flex_display, display_id,
+    display_ime_policy, no_vd_destroy_content,
+    no_vd_system_decorations, start_app,
+    start_app_force_stop, start_app_prefix_match
+
+CONTRÔLE / INPUT (10)
+    readonly, keyboard, mouse, gamepad, noclip, prefertext,
+    raw_key_events, no_key_repeat, no_mouse_hover, mouse_bind
+
+OTG (6)
+    otg, no_power_on, power_off_on_close,
+    force_uhid_keyboard, force_uhid_mouse, force_uhid_gamepad
+
+TÉLÉPHONE (5)
+    screenoff, stayawake, touches, disable_screensaver,
+    screen_off_timeout
+
+ROTATION / CROP (7)
+    angle, capture_orientation, display_orientation,
+    record_orientation, orientation, crop, orientation_locked
+
+ENREGISTREMENT (6)
+    record, rformat, push_target, no_cleanup, pause_on_exit,
+    time_limit
+
+FENÊTRE AVANCÉE (6)
+    window_width, window_height, render_driver, render_fit,
+    background_color, no_window
+
+V4L2 (2)
+    v4l2_sink, v4l2_buffer
+
+DEBUG / VERBOSITÉ (3)
+    verbosity, print_fps, no_terminal_title
+
+SHORTCUTS (1)
+    shortcut_mod
+
+MISC (2)
+    legacy_paste, no_cleanup_signal
+
+AVANCÉ (1)
+    extra
+
+INTERFACE (9)
+    palette, animated, glass, ui_mode,
+    instances_enabled, profiles_enabled, metrics_live,
+    preview_enabled, quick_actions_enabled
+
+MACROS (2)
+    macros_enabled, macros_list
+
+PRESETS (2)
+    active_preset, custom_presets
+
+Total : ~102 champs
+
+
+============================================================
+6. MODES BASE / PRO
+============================================================
+
+MODE BASE (6 vues)
+    Device, Vidéo, Audio, Affichage, Contrôle, Enreg.
+    ~30 options couvertes.
+    Public : utilisateur occasionnel.
+
+MODE PRO (11+ vues)
+    BASE + Caméra, Virtuel, OTG/Game, Macros, Réseau,
+    Fenêtre, Rotation, Vidéo/Audio avancé, Comportement,
+    V4L2, Debug.
+    ~180 options couvertes.
+    Public : power-user.
+
+BASCULE
+    Toggle [PRO] dans la barre supérieure.
+    Sauvegardé dans settings.json (ui_mode).
+
+
+============================================================
+7. PRESETS VISUELS
+============================================================
+
+Trois presets par défaut en cartes colorées :
+
+    Stream Ultra    →  1080p · 60 FPS   (bleu)
+        bitrate=16, max_size=1920, max_fps=60,
+        codec=h264, abuf=50
+
+    Record 4K       →  4K · 30 FPS      (violet)
+        bitrate=32, max_size=3840, max_fps=30,
+        codec=h265, record=auto_4k.mp4
+
+    LowLat          →  720p · 120 FPS   (vert)
+        bitrate=8, max_size=1280, max_fps=120,
+        codec=h264, vbuf=0, abuf=10
+
+Clic = applique immédiatement.
+Preset actif = bordure accent + glow.
+Presets personnalisés ajoutables.
+
+
+============================================================
+8. MULTI-INSTANCES
+============================================================
+
+Chaque instance = configuration + appareil.
+
+STRUCTURE :
+    Instance {
+        id: str (uuid)
+        name: str
+        settings: Settings
+        current_profile: str
+        adb_device: Device | None
+        running: bool
+        process: QProcess | None
+    }
+
+COMPORTEMENT :
+    - Nouvelle instance : [+ New Instance]
+    - Fermer : ✕ sur l'onglet
+    - Basculer : clic sur l'onglet
+    - Une seule instance tourne à la fois (par défaut)
+    - Max 8 instances simultanées
+
+PERSISTANCE :
+    Liste d'instances dans config.json
+
+
+============================================================
+9. PROFILS PAR INSTANCE
+============================================================
+
+Sous-onglets dans chaque instance.
+
+    [Vue principale] [Profil 2] [Profil 3] [+]
+
+Chaque profil = delta de Settings.
+Clic = applique.
+Renommable, duplicable, supprimable.
+"Vue principale" protégée.
+
+
+============================================================
+10. CARTE APPAREIL ENRICHIE
+============================================================
+
+    ┌────────────────────────────────────────────────────┐
+    │ [📱]  Samsung Galaxy S23 Ultra         ● Connecté  │
+    │       SM-S918B                          USB 3.2   │
+    │                                         ADB Online │
+    │       ⚡ FPS: 60   📡 Latence: 12ms   🔋 88%        │
+    └────────────────────────────────────────────────────┘
+
+MÉTRIQUES LIVE :
+    - FPS : parsé depuis --print-fps
+    - Latence : parsé depuis la sortie scrcpy
+    - Batterie : adb shell dumpsys battery (refresh 5s)
+
+Refresh automatique toutes les 2 secondes.
+
+
+============================================================
+11. PREVIEW TÉLÉPHONE
+============================================================
+
+Dans la vue Vidéo :
+
+    [Screenshot live du téléphone]
+    [🖵 Plein écran] [🔄 Rotation] [📸 Capture] [⚙ Avancé]
+
+CAPTURE :
+    - Si scrcpy inactif : adb exec-out screencap -p
+    - Refresh toutes les 3 secondes
+    - Cache + thread dédié
+    - [Capture] : sauvegarde PNG horodaté
+
+ACTIONS :
+    - Plein écran (toggle -f)
+    - Rotation (dropdown)
+    - Capture d'écran (PNG)
+    - Paramètres avancés
+
+
+============================================================
+12. MODE TEST
+============================================================
+
+Bouton [⚗ Test] dans la barre inférieure.
+
+COMPORTEMENT :
+    - Lance scrcpy avec --time-limit=3
+    - Affiche la sortie dans la console
+    - Ferme auto après 3 secondes
+    - Détecte les erreurs
+    - Résumé : OK / erreurs
+
+
+============================================================
+13. VUE MACROS
+============================================================
+
+Vue PRO pour enregistrer des séquences d'actions.
+
+EXEMPLES :
+    "Test app" :
+        1. lancer scrcpy
+        2. attendre 2s
+        3. adb shell am start -n com.example.app
+        4. capture d'écran
+        5. fermer scrcpy
+
+INTERFACE :
+    - Liste des macros
+    - Éditeur d'étapes
+    - Enregistrer session
+    - Rejouer
+
+STOCKAGE :
+    JSON dans settings.json (macros_list)
+
+V4.0 : vue présente, fonctionnalité basique.
+
+
+============================================================
+14. BUILD_ARGS ÉTENDU
+============================================================
+
+Ordre officiel scrcpy (18 sections) :
+    1. Sélection appareil
+    2. Enregistrement
+    3. Vidéo
+    4. Audio
+    5. Caméra
+    6. Fenêtre
+    7. Affichage
+    8. Écran virtuel
+    9. Contrôle
+    10. OTG / gamepad
+    11. Téléphone
+    12. Rotation / crop
+    13. Réseau
+    14. V4L2
+    15. Comportement
+    16. Debug
+    17. Miscellaneous
+    18. Options libres (extra)
+
+Corrections intégrées :
+    - --orientation : sync display+record
+    - --start-app : préfixes + et ?
+    - --tcpip : préfixe + si force reconnect
+    - -K / -M / -G : traduits en --keyboard=uhid etc.
+    - --no-window : désactive la fenêtre scrcpy
+
+
+============================================================
+15. PARSER SCRCPY_AIDE.TXT
+============================================================
+
+Module : core/scrcpy_help.py
+
+Fonctions :
+    - load_help(path) -> dict
+    - get_description(option) -> str
+    - search(query) -> list
+    - list_all() -> list
+
+Usage :
+    - Tooltips dynamiques
+    - Vue Debug
+    - Command Palette (Ctrl+K)
+
+
+============================================================
+16. COMMAND PALETTE (Ctrl+K)
+============================================================
+
+Fenêtre de recherche flottante.
+
+Recherche floue (fuzzy) sur :
+    - Actions rapides (lancer, arrêter, nouvelle instance…)
+    - Navigation (aller à Vidéo, Audio, Caméra…)
+    - Options scrcpy (parsing scrcpy_aide.txt)
+
+Sélection : Entrée
+Fermer : Échap
+
+
+============================================================
+17. RACCOURCIS CLAVIER
+============================================================
+
+    Ctrl+K          Command palette
+    Ctrl+Entrée     Lancer scrcpy
+    Ctrl+.          Arrêter scrcpy
+    Ctrl+B          Masquer sidebar
+    Ctrl+D          Masquer panneau info
+    Ctrl+T          Nouvel onglet instance
+    Ctrl+W          Fermer onglet instance
+    Ctrl+1..9       Basculer instance N
+    Ctrl+Tab        Instance suivante
+    Ctrl+Shift+Tab  Instance précédente
+    F11             Mode focus
+    F1              Aide scrcpy
+    Ctrl+,          Paramètres
+    Ctrl+Q          Quitter
+
+
+============================================================
+18. PERFORMANCE
+============================================================
+
+OBJECTIFS :
+    - Réactif sur 8 Go de RAM
+    - Démarrage < 2 secondes
+    - Bascule de vue < 250 ms
+    - Preview téléphone < 500 ms
+    - Aucune opération bloquante > 100 ms
+
+TECHNIQUES :
+    - Appels adb/scrcpy asynchrones
+    - Parser scrcpy_help lazy
+    - Preview : cache + thread dédié
+    - Métriques : refresh 2s, arrêt si invisible
+    - QSS régénéré seulement au changement de palette
+
+
+============================================================
+19. PLAN DE REFONTE EN VAGUES
+============================================================
+
+VAGUE R0 — STRUCTURE DU PROJET
+    - Arborescence complète
+    - __init__.py
+    - main.py minimal (fenêtre vide sombre)
+    - requirements.txt, pyproject.toml
+    - README.md initial avec signature
+    - .gitignore
+    - tests/test_smoke.py
+
+VAGUE R1 — MODELS + PROFILES
+    - core/models.py (~100 champs)
+    - config/profiles.py
+    - config/defaults.py
+    - Tests unitaires
+
+VAGUE R2 — BUILD_ARGS COMPLET
+    - core/scrcpy.py (~400 lignes)
+    - Corrections : --orientation, --no-window,
+      -G/-K/-M, préfixes + et ?, tcpip force
+    - Tests unitaires
+
+VAGUE R3 — THEME NÉON-BLEU
+    - ui/theme.py
+    - Palette par défaut : néon-bleu
+    - QSS régénéré
+    - Palettes alternatives conservées
+
+VAGUE R4 — WINDOW 5 ZONES
+    - ui/window.py (A/B/C/D/E)
+    - Zone A : titlebar enrichi
+    - Zone B1 : sidebar sections repliables
+    - Zone B2 : instance_tabs.py
+    - Zone B3 : profile_tabs.py
+    - Zone C : QStackedWidget
+    - Zone D : info_panel
+    - Zone E : command_bar + status_bar + mode Test
+
+VAGUE R5 — WIDGETS SIGNATURE
+    - ui/widgets/preset_card.py
+    - ui/widgets/metric_pill.py
+    - ui/widgets/quick_actions.py
+    - ui/widgets/animations.py
+
+VAGUE R6 — COMMAND PALETTE
+    - ui/widgets/command_palette.py
+    - Ctrl+K fonctionnel
+    - Intégration avec scrcpy_help
+
+VAGUE R7 — MULTI-INSTANCES ET PROFILS
+    - core/instances.py
+    - Instance manager
+    - Création / suppression
+    - Sauvegarde dans config.json
+    - Profils par instance
+
+VAGUE R8 — MÉTRIQUES LIVE
+    - core/metrics.py
+    - FPS, latence, batterie
+    - Mise à jour périodique
+
+VAGUE R9 — PREVIEW TÉLÉPHONE
+    - Widget preview
+    - Screenshot adb
+    - Cache + thread
+    - Actions rapides
+
+VAGUE R10 — VUES PRO BATCH 1
+    - ui/views/camera.py
+    - ui/views/virtual_display.py
+    - ui/views/gamepad.py
+    - ui/views/macros.py
+
+VAGUE R11 — VUES PRO BATCH 2
+    - ui/views/network.py
+    - ui/views/window_position.py
+    - ui/views/rotation.py
+    - ui/views/advanced_av.py
+
+VAGUE R12 — VUES PRO BATCH 3
+    - ui/views/behavior.py
+    - ui/views/v4l2.py
+    - ui/views/debug.py
+    - ui/views/advanced.py
+
+VAGUE R13 — PARSER SCRCPY_HELP
+    - core/scrcpy_help.py
+    - Tooltips dynamiques
+
+VAGUE R14 — VUES UTILITAIRES
+    - ui/views/about.py (avec signature @Bienvenu K.K)
+    - ui/views/settings.py
+    - ui/views/console.py
+
+VAGUE R15 — INTÉGRATION ET TESTS
+    - Câblage complet
+    - Vérification 100% options
+    - Tests pytest-qt
+    - Corrections bugs
+
+VAGUE R16 — FINITIONS
+    - Tooltips explicites
+    - Groupes repliables
+    - Reset par vue
+    - Import/Export config JSON
+    - Documentation utilisateur
+    - README final
+
+
+============================================================
+20. RÈGLES DE LIVRAISON
+============================================================
+
+    - Fichiers COMPLETS et FONCTIONNELS
+    - Aucun stub, aucun NotImplementedError, aucun TODO
+    - Type hints partout
+    - pathlib.Path exclusivement
+    - Docstrings sur les fonctions publiques
+    - Tests obligatoires pour modules critiques
+    - Mode BASE doit TOUJOURS fonctionner
+    - Champ "extra" reste en échappatoire
+    - Aucune dépendance en dehors de PySide6
+    - scrcpy_aide.txt non modifié
+    - Signature @Bienvenu K.K présente dans
+      "À propos" et README
+
+
+============================================================
+21. CRITÈRES DE RÉUSSITE
+============================================================
+
+    [ ] 100% des options scrcpy 4.1 exposées (mode PRO)
+    [ ] Palette néon-bleu appliquée
+    [ ] Multi-instances fonctionnel (min 3 simultanées)
+    [ ] Profils par instance fonctionnels
+    [ ] Command Palette Ctrl+K opérationnelle
+    [ ] Preview téléphone < 500ms
+    [ ] Métriques live mises à jour
+    [ ] Mode Test fonctionnel
+    [ ] Vue Macros basique
+    [ ] Signature @Bienvenu K.K visible
+    [ ] Aucune régression
+    [ ] Tests unitaires passent
+
+
+============================================================
+22. VISION FINALE
+============================================================
+
+Scrcpy Studio devient un outil premium à double usage :
+
+    - Lanceur simple pour utilisateur occasionnel
+      (mode BASE, interface épurée)
+    - Console avancée pour power-user
+      (mode PRO, 100% des options)
+
+Avec une identité visuelle forte (néon-bleu premium),
+une architecture multi-instances, et une ergonomie
+inspirée des outils modernes (Linear, Raycast, Arc).
+
+La complexité est cachée, jamais supprimée.
+
+Conçu et signé par @Bienvenu K.K — 2026
+
+
+============================================================
+FIN DE LA ROADMAP v4.0
+============================================================

@@ -1,0 +1,20 @@
+[project]
+name = "scrcpy-studio"
+version = "4.0.0"
+description = "Lanceur graphique PySide6 pour scrcpy 4.1 — @Bienvenu K.K"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = ["PySide6>=6.6"]
+authors = [{ name = "Bienvenu K.K" }]
+
+[project.scripts]
+scrcpy-studio = "main:main"
+
+[tool.setuptools]
+py-modules = ["main"]
+
+[tool.setuptools.packages.find]
+include = ["config*", "core*", "ui*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

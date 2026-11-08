@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Scrcpy Studio
+GenericName=Android screen mirroring
+Comment=Lanceur graphique pour scrcpy
+Comment[fr]=Lanceur graphique pour scrcpy
+Exec=scrcpy-studio
+Icon=scrcpy-studio
+Terminal=false
+Categories=Utility;System;
+Keywords=scrcpy;android;adb;mirror;miroir;
