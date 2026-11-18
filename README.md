@@ -3,6 +3,10 @@
 **Lanceur graphique pour [scrcpy](https://github.com/Genymobile/scrcpy) 4.1** — Python 3.11+ / PySide6.
 Direction artistique néon-bleu premium · modes **BASE** (6 vues) et **PRO** (toutes les options) · multi-instances, profils, préréglages, Command Palette.
 
+<p align="center">
+  <img src="scrcpy.png" width="400" alt="Menu du Studio">
+</p>
+
 > Conçu par **@Bienvenu K.K** — 2026
 
 *Simple par défaut, complet sur demande.* Les 108 options longues de scrcpy 4.1 (plus `-G`, `-K`, `-M`) sont accessibles depuis l'interface en mode PRO ; le champ « Options libres » (vue Avancé) reste l'échappatoire.
